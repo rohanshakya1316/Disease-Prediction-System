@@ -75,11 +75,11 @@ def signup_patient(request):
 
           if password == password1:
               if User.objects.filter(username = username).exists():
-                messages.info(request,'username already taken')
+                messages.info(request,'Username already taken')
                 return redirect('signup_patient')
 
               elif User.objects.filter(email = email).exists():
-                messages.info(request,'email already taken')
+                messages.info(request,'Email already taken')
                 return redirect('signup_patient')
                 
               else :
@@ -88,12 +88,12 @@ def signup_patient(request):
                 
                 patientnew = patient(user=user,name=name,dob=dob,gender=gender,address=address,mobile_no=mobile_no)
                 patientnew.save()
-                messages.info(request,'user created sucessfully')
+                messages.info(request,'User created sucessfully')
                 
               return redirect('sign_in_patient')
 
           else:
-            messages.info(request,'password not matching, please try again')
+            messages.info(request,'Password not matching, please try again')
             return redirect('signup_patient')
 
       else :
@@ -195,11 +195,11 @@ def signup_doctor(request):
 
           if password == password1:
               if User.objects.filter(username = username).exists():
-                messages.info(request,'username already taken')
+                messages.info(request,'Username already taken')
                 return redirect('signup_doctor')
 
               elif User.objects.filter(email = email).exists():
-                messages.info(request,'email already taken')
+                messages.info(request,'Email already taken')
                 return redirect('signup_doctor')
                 
               else :
@@ -208,13 +208,13 @@ def signup_doctor(request):
                 
                 doctornew = doctor( user=user, name=name, dob=dob, gender=gender, address=address, mobile_no=mobile_no, registration_no=registration_no, year_of_registration=year_of_registration, qualification=qualification, State_Medical_Council=State_Medical_Council, specialization=specialization )
                 doctornew.save()
-                messages.info(request,'user created sucessfully')
+                messages.info(request,'User created sucessfully')
                 print("doctorcreated")
                 
               return redirect('sign_in_doctor')
 
           else:
-            messages.info(request,'password not matching, please try again')
+            messages.info(request,'Password not matching, please try again')
             return redirect('signup_doctor')
 
       else :
@@ -252,11 +252,11 @@ def sign_in_doctor(request):
                   return redirect('doctor_ui')
                
               except :
-                  messages.info(request,'invalid credentials')
+                  messages.info(request,'Invalid credentials')
                   return redirect('sign_in_doctor')
 
           else :
-             messages.info(request,'invalid credentials')
+             messages.info(request,'Invalid credentials')
              return redirect('sign_in_doctor')
 
 
