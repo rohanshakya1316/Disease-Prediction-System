@@ -1,49 +1,3 @@
-# import pandas as pd
-# import numpy as np 
-# from sklearn.naive_bayes import MultinomialNB
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.metrics import accuracy_score
-# import joblib 
-
-# # Load Dataset
-# train_df = pd.read_csv("Training.csv")
-# test_df = pd.read_csv("Testing.csv")
-
-# # Seperate Features and Target 
-# X_train = train_df.drop("prognosis", axis=1)
-# y_train = train_df["prognosis"]
-
-# X_test = test_df.drop("prognosis", axis=1)
-# y_test = test_df["prognosis"]
-
-# # Encode Disease Labels 
-# le = LabelEncoder()
-# y_train_encoded = le.fit_transform(y_train)
-# y_test_encoded = le.transform(y_test)
-
-# # Create Model 
-# model = MultinomialNB()
-
-# # Train Model 
-# model.fit(X_train, y_train_encoded)
-
-# # Test Accuracy 
-# y_pred = model.predict(X_test)
-# accuracy = accuracy_score(y_test_encoded, y_pred)
-
-# print("Model Accuracy:", accuracy)
-
-# # Save Model and Encoder 
-# joblib.dump(model, "trained_model.pkl")
-# joblib.dump(le, "label_encoder.pkl")
-
-# # Save Column Order (VVI)
-# joblib.dump(X_train.columns.tolist(), "model_columns.pkl")
-
-# print("Model training completed successfully!")
-
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -119,17 +73,17 @@ print("F1 Score :", f1_score(y, y_pred, average='weighted'))
 # =========================
 # 9. Confusion Matrix
 # =========================
-# cm = confusion_matrix(y, y_pred)
+cm = confusion_matrix(y, y_pred)
 
-# plt.figure(figsize=(16,12))
-# sn.heatmap(cm, annot=True, fmt='d', cmap="Blues")
-# plt.xlabel("Predicted")
-# plt.ylabel("Actual")
-# plt.title("Confusion Matrix For PREDICO")
+plt.figure(figsize=(16,12))
+sn.heatmap(cm, annot=True, fmt='d', cmap="Blues")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix For PREDICO")
 
 # # Save as JPG (high quality)
-# # plt.savefig("confusion_matrix.jpg", format="jpg", dpi=300, bbox_inches='tight')
-# plt.show()
+plt.savefig("confusion_matrix.jpg", format="jpg", dpi=300, bbox_inches='tight')
+plt.show()
 
 # =========================
 # 9. Save Best Model

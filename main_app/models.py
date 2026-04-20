@@ -6,11 +6,8 @@ from datetime import date
 
 # Create your models here.
 
-
 #user = models.OneToOneField(settings.AUTH_USER_MODEL)
-
 class patient(models.Model):
-
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     
     is_patient = models.BooleanField(default=True)
@@ -22,7 +19,6 @@ class patient(models.Model):
     mobile_no = models.CharField(max_length = 15)
     gender = models.CharField(max_length = 10)
 
-    
     @property
     def age(self):
         today = date.today()
@@ -32,10 +28,7 @@ class patient(models.Model):
             age -= 1
         return age 
 
-
-
 class doctor(models.Model):
-
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     
     is_patient = models.BooleanField(default=False)
@@ -56,12 +49,7 @@ class doctor(models.Model):
 
     rating = models.IntegerField(default=0)
 
-
-
-
-
 class diseaseinfo(models.Model):
-
     patient = models.ForeignKey(patient , null=True, on_delete=models.SET_NULL)
 
     diseasename = models.CharField(max_length = 200)
@@ -70,28 +58,19 @@ class diseaseinfo(models.Model):
     confidence = models.DecimalField(max_digits=5, decimal_places=2)
     consultdoctor = models.CharField(max_length = 200)
 
-
-
 class consultation(models.Model):
-
     patient = models.ForeignKey(patient ,null=True, on_delete=models.SET_NULL)
     doctor = models.ForeignKey(doctor ,null=True, on_delete=models.SET_NULL)
     diseaseinfo = models.OneToOneField(diseaseinfo, null=True, on_delete=models.SET_NULL)
     consultation_date = models.DateField()
     status = models.CharField(max_length = 20)
 
-
-
-
-
 class rating_review(models.Model):
-
     patient = models.ForeignKey(patient ,null=True, on_delete=models.SET_NULL)
     doctor = models.ForeignKey(doctor ,null=True, on_delete=models.SET_NULL)
     
     rating = models.IntegerField(default=0)
     review = models.TextField( blank=True ) 
-
 
     @property
     def rating_is(self):

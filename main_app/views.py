@@ -17,318 +17,45 @@ import pickle
 model = pickle.load(open("multinomial_kfold_model.pkl", "rb"))
 
 model_columns = list(pd.read_csv("Training.csv").drop("prognosis", axis=1).columns)
-#loading trained_model
-# import joblib as jb
-# model = jb.load('multinomial_kfold_model.pkl')
-# model = jb.load('trained_model.pkl')
-# le = jb.load('label_encoder.pkl')
-# model_columns = jb.load('model_columns.pkl')
-
-
 
 def home(request):
-
-  if request.method == 'GET':
-        
+  if request.method == 'GET':      
       if request.user.is_authenticated:
         return render(request,'homepage/index.html')
-
       else :
         return render(request,'homepage/index.html')   
 
 def admin_ui(request):
-
     if request.method == 'GET':
-
       if request.user.is_authenticated:
-
         auser = request.user
         Feedbackobj = Feedback.objects.all()
-
         return render(request,'admin/admin_ui/admin_ui.html' , {"auser":auser,"Feedback":Feedbackobj})
-
       else :
         return redirect('home')
 
-
-
     if request.method == 'POST':
-
        return render(request,'patient/patient_ui/profile.html')
 
 def patient_ui(request):
-
     if request.method == 'GET':
-
       if request.user.is_authenticated:
-
         patientusername = request.session['patientusername']
         puser = User.objects.get(username=patientusername)
-
         return render(request,'patient/patient_ui/profile.html' , {"puser":puser})
-
       else :
         return redirect('home')
 
     if request.method == 'POST':
-
        return render(request,'patient/patient_ui/profile.html')   
 
 def pviewprofile(request, patientusername):
-
     if request.method == 'GET':
-
-          puser = User.objects.get(username=patientusername)
-
-          return render(request,'patient/view_profile/view_profile.html', {"puser":puser})
-
-# def checkdisease(request):
-
-#    alphabaticsymptomslist = sorted(model_columns)
-
-#    if request.method == 'GET':
-#       return render(request,'patient/checkdisease/checkdisease.html', {"list2":alphabaticsymptomslist})
-#    elif request.method == 'POST':
-          
-#       inputno = int(request.POST["noofsym"])
-#       print(inputno)
-#       if (inputno == 0 ) :
-#           return JsonResponse({'predicteddisease': "none",'confidencescore': 0 })
-  
-#       else :
-
-#         psymptoms = []
-#         psymptoms = request.POST.getlist("symptoms[]")
-       
-#         print(psymptoms)
-        
-#       input_vector = np.zeros(len(model_columns))
-
-#       for symptom in psymptoms: 
-#         if symptom in model_columns:
-#            index = model_columns.index(symptom)
-#            input_vector[index] = 1
-    
-#         inputtest = input_vector.reshape(1, -1)
-
-#         print(inputtest)
-      
-#         predicted = model.predict(inputtest)
-#         predicted_disease = le.inverse_transform(predicted)[0]
-
-#         print("Predicted disease name:", predicted_disease)
-
-#         y_pred_2 = model.predict_proba(inputtest)
-#         confidencescore=y_pred_2.max() * 100
-#         print(" confidence score of : = {0} ".format(confidencescore))
-
-#         confidencescore = format(confidencescore, '.0f')
-#         predicted_disease = predicted_disease
-        
-
-        
-#         # Code for consulting doctors        
-
-#         Rheumatologist = [  'Osteoarthristis','Arthritis']
-       
-#         Cardiologist = [ 'Heart attack','Bronchial Asthma','Hypertension ']
-       
-#         ENT_specialist = ['(vertigo) Paroymsal  Positional Vertigo','Hypothyroidism' ]
-
-#         Orthopedist = []
-
-#         Neurologist = ['Varicose veins','Paralysis (brain hemorrhage)','Migraine','Cervical spondylosis']
-
-#         Allergist_Immunologist = ['Allergy','Pneumonia',
-#         'AIDS','Common Cold','Tuberculosis','Malaria','Dengue','Typhoid']
-
-#         Urologist = [ 'Urinary tract infection',
-#          'Dimorphic hemmorhoids(piles)']
-
-#         Dermatologist = [  'Acne','Chicken pox','Fungal infection','Psoriasis','Impetigo']
-
-#         Gastroenterologist = ['Peptic ulcer diseae', 'GERD','Chronic cholestasis','Drug Reaction','Gastroenteritis','Hepatitis E',
-#         'Alcoholic hepatitis','Jaundice','hepatitis A',
-#          'Hepatitis B', 'Hepatitis C', 'Hepatitis D','Diabetes ','Hypoglycemia']
-         
-#         if predicted_disease in Rheumatologist :
-#            consultdoctor = "Rheumatologist"
-           
-#         if predicted_disease in Cardiologist :
-#            consultdoctor = "Cardiologist"
-           
-#         elif predicted_disease in ENT_specialist :
-#            consultdoctor = "ENT specialist"
-     
-#         elif predicted_disease in Orthopedist :
-#            consultdoctor = "Orthopedist"
-     
-#         elif predicted_disease in Neurologist :
-#            consultdoctor = "Neurologist"
-     
-#         elif predicted_disease in Allergist_Immunologist :
-#            consultdoctor = "Allergist/Immunologist"
-     
-#         elif predicted_disease in Urologist :
-#            consultdoctor = "Urologist"
-     
-#         elif predicted_disease in Dermatologist :
-#            consultdoctor = "Dermatologist"
-     
-#         elif predicted_disease in Gastroenterologist :
-#            consultdoctor = "Gastroenterologist"
-     
-#         else :
-#            consultdoctor = "other"
-
-#         request.session['doctortype'] = consultdoctor 
-
-#         patientusername = request.session['patientusername']
-#         puser = User.objects.get(username=patientusername)
-     
-#         #saving to database.....................
-
-#         patient = puser.patient
-#         diseasename = predicted_disease
-#         no_of_symp = inputno
-#         symptomsname = psymptoms
-#         confidence = confidencescore
-
-#         diseaseinfo_new = diseaseinfo(patient=patient,diseasename=diseasename,no_of_symp=no_of_symp,symptomsname=symptomsname,confidence=confidence,consultdoctor=consultdoctor)
-#         diseaseinfo_new.save()
-        
-
-#         request.session['diseaseinfo_id'] = diseaseinfo_new.id
-
-#         print("disease record saved sucessfully.............................")
-
-#         return JsonResponse({'predicteddisease': predicted_disease ,'confidencescore':confidencescore , "consultdoctor": consultdoctor})
-   
-# def checkdisease(request):
-
-#     alphabaticsymptomslist = sorted(model_columns)
-
-#     if request.method == 'GET':
-#         return render(request, 'patient/checkdisease/checkdisease.html',
-#                       {"list2": alphabaticsymptomslist})
-
-#     elif request.method == 'POST':
-
-#         inputno = int(request.POST["noofsym"])
-
-#         if inputno == 0:
-#             return JsonResponse({
-#                 'predicteddisease': "none",
-#                 'confidencescore': 0
-#             })
-
-#         # -------------------------
-#         # 1. Get Selected Symptoms
-#         # -------------------------
-#         psymptoms = request.POST.getlist("symptoms[]")
-
-#         # -------------------------
-#         # 2. Create Input Vector
-#         # -------------------------
-#         input_vector = np.zeros(len(model_columns))
-
-#         for symptom in psymptoms:
-#             if symptom in model_columns:
-#                 index = model_columns.index(symptom)
-#                 input_vector[index] = 1
-
-#         inputtest = pd.DataFrame(
-#             [input_vector], 
-#             columns=model_columns
-#         )
-
-#         # -------------------------
-#         # 3. Predict Disease
-#         # -------------------------
-#         predicted = model.predict(inputtest)[0]
-#         predicted_disease = le.inverse_transform([predicted])[0]
-
-#         # Probability
-#         y_proba = model.predict_proba(inputtest)
-#         confidencescore = np.max(y_proba) * 100
-#         confidencescore = format(confidencescore, '.0f')
-#         top3 = sorted(zip(model.classes_, y_proba[0]), key=lambda x: x[1], reverse=True)[:3]
-
-#         for disease, prob in top3:
-#             print(disease, f"{prob*100:.0f}%")
-
-
-#         # -------------------------
-#         # 4. Doctor Recommendation
-#         # -------------------------
-#         Rheumatologist = ['Osteoarthristis', 'Arthritis']
-#         Cardiologist = ['Heart attack', 'Bronchial Asthma', 'Hypertension ']
-#         ENT_specialist = ['(vertigo) Paroymsal  Positional Vertigo', 'Hypothyroidism']
-#         Orthopedist = []
-#         Neurologist = ['Varicose veins', 'Paralysis (brain hemorrhage)', 'Migraine', 'Cervical spondylosis']
-#         Allergist_Immunologist = ['Allergy', 'Pneumonia', 'AIDS', 'Common Cold',
-#                                   'Tuberculosis', 'Malaria', 'Dengue', 'Typhoid']
-#         Urologist = ['Urinary tract infection', 'Dimorphic hemmorhoids(piles)']
-#         Dermatologist = ['Acne', 'Chicken pox', 'Fungal infection', 'Psoriasis', 'Impetigo']
-#         Gastroenterologist = ['Peptic ulcer diseae', 'GERD', 'Chronic cholestasis',
-#                               'Drug Reaction', 'Gastroenteritis', 'Hepatitis E',
-#                               'Alcoholic hepatitis', 'Jaundice', 'hepatitis A',
-#                               'Hepatitis B', 'Hepatitis C', 'Hepatitis D',
-#                               'Diabetes ', 'Hypoglycemia']
-
-#         if predicted_disease in Rheumatologist:
-#             consultdoctor = "Rheumatologist"
-#         elif predicted_disease in Cardiologist:
-#             consultdoctor = "Cardiologist"
-#         elif predicted_disease in ENT_specialist:
-#             consultdoctor = "ENT Specialist"
-#         elif predicted_disease in Orthopedist:
-#             consultdoctor = "Orthopedist"
-#         elif predicted_disease in Neurologist:
-#             consultdoctor = "Neurologist"
-#         elif predicted_disease in Allergist_Immunologist:
-#             consultdoctor = "Allergist/Immunologist"
-#         elif predicted_disease in Urologist:
-#             consultdoctor = "Urologist"
-#         elif predicted_disease in Dermatologist:
-#             consultdoctor = "Dermatologist"
-#         elif predicted_disease in Gastroenterologist:
-#             consultdoctor = "Gastroenterologist"
-#         else:
-#             consultdoctor = "Other"
-
-#         request.session['doctortype'] = consultdoctor
-
-#         # -------------------------
-#         # 5. Save to Database
-#         # -------------------------
-#         patientusername = request.session['patientusername']
-#         puser = User.objects.get(username=patientusername)
-#         patient = puser.patient
-
-#         diseaseinfo_new = diseaseinfo(
-#             patient=patient,
-#             diseasename=predicted_disease,
-#             no_of_symp=inputno,
-#             symptomsname=psymptoms,
-#             confidence=confidencescore,
-#             consultdoctor=consultdoctor
-#         )
-
-#         diseaseinfo_new.save()
-
-#         request.session['diseaseinfo_id'] = diseaseinfo_new.id
-
-#         return JsonResponse({
-#             'predicteddisease': predicted_disease,
-#             'confidencescore': confidencescore,
-#             'consultdoctor': consultdoctor
-#         })
+        puser = User.objects.get(username=patientusername)
+        return render(request,'patient/view_profile/view_profile.html', {"puser":puser})
 
 def checkdisease(request):
-
     alphabaticsymptomslist = sorted(model_columns)
-
     # =========================
     # GET REQUEST
     # =========================
@@ -457,44 +184,32 @@ def checkdisease(request):
         })
    
 def pconsultation_history(request):
-
     if request.method == 'GET':
-
       patientusername = request.session['patientusername']
       puser = User.objects.get(username=patientusername)
-      patient_obj = puser.patient
-        
+      patient_obj = puser.patient     
       consultationnew = consultation.objects.filter(patient = patient_obj)
           
       return render(request,'patient/consultation_history/consultation_history.html',{"consultation":consultationnew})
 
 def dconsultation_history(request):
-
     if request.method == 'GET':
-
       doctorusername = request.session['doctorusername']
       duser = User.objects.get(username=doctorusername)
       doctor_obj = duser.doctor
-        
       consultationnew = consultation.objects.filter(doctor = doctor_obj)
           
       return render(request,'doctor/consultation_history/consultation_history.html',{"consultation":consultationnew})
 
 def doctor_ui(request):
-
     if request.method == 'GET':
-
       doctorid = request.session['doctorusername']
       duser = User.objects.get(username=doctorid)
-
     
       return render(request,'doctor/doctor_ui/profile.html',{"duser":duser})
 
 def dviewprofile(request, doctorusername):
-
     if request.method == 'GET':
-
-         
          duser = User.objects.get(username=doctorusername)
          r = rating_review.objects.filter(doctor=duser.doctor)
        
@@ -546,7 +261,6 @@ def  consultationview(request,consultation_id):
 
 def rate_review(request,consultation_id):
    if request.method == "POST":
-         
          consultation_obj = consultation.objects.get(id=consultation_id)
          patient = consultation_obj.patient
          doctor1 = consultation_obj.doctor
@@ -563,9 +277,7 @@ def rate_review(request,consultation_id):
 
 def close_consultation(request,consultation_id):
    if request.method == "POST":
-         
          consultation.objects.filter(pk=consultation_id).update(status="closed")
-         
          return redirect('home')
 
 #-----------------------------chatting system ---------------------------------------------------
@@ -573,7 +285,6 @@ def close_consultation(request,consultation_id):
 def post(request):
     if request.method == "POST":
         msg = request.POST.get('msgbox', None)
-
         consultation_id = request.session['consultation_id'] 
         consultation_obj = consultation.objects.get(id=consultation_id)
 
@@ -590,7 +301,6 @@ def post(request):
 
 def chat_messages(request):
    if request.method == "GET":
-
          consultation_id = request.session['consultation_id'] 
 
          c = Chat.objects.filter(consultation_id=consultation_id)

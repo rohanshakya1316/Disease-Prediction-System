@@ -57,11 +57,10 @@ window.addEventListener('click', function (event) {
             div.style.backgroundColor = "#d4edda";
             div.style.borderRadius = "20px";
 
-            div.innerHTML = `
+    div.innerHTML = `
                 ${value}
-                <span style="color:red; cursor:pointer; margin-left:8px;"
-                      onclick="removeSymptom('${value}')">✖</span>
-                <input type="hidden" class="symptoms" value="${value}">
+                <span style="color:red; cursor:pointer; margin-left:8px;" onclick="removeSymptom('${value}')">✖</span>
+                <input type="hidden" class="symptoms" value="${value}" >
             `;
 
             sympbox.appendChild(div);
